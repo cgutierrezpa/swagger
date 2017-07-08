@@ -1,0 +1,33 @@
+{
+  "name": "flockit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend Flockit application.",
+  "keywords": [
+    "fundle",
+    "backend",
+    "server"
+  ],
+  "author": "Rubén López Lozoya & Carlos Gutiérrez Paradela",
+  "license": "",
+  "main": "server.js",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
+    "express": "^4.12.3",
+    "mysql": "^2.13.0",
+    "nodemailer": "^4.0.1",
+    "nodemon": "^1.11.0",
+    "swagger-express-mw": "^0.1.0"
+  },
+  "devDependencies": {
+    "should": "^7.1.0",
+    "supertest": "^1.0.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=test nodemon server.js",
+    "start-dev": "NODE_ENV=development node server.js",
+    "start-prod": "NODE_ENV=production node server.js",
+    "test": "swagger project test"
+  }
+}
