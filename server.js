@@ -1,18 +1,19 @@
 //'use strict';
 var SwaggerExpress = require('swagger-express-mw'),
-	env = process.env.NODE_ENV || 'test',
-	config = require('./config/config.js')[env],
-	express = require('express'),
-	//bodyParser = require('body-parser'),
-	app = express(),
-	db = require('./lib/db.js'),
-	port = config.server.port || 3000;
+env = process.env.NODE_ENV || 'test',
+config = require('./config/config.js')[env],
+express = require('express'),
+app = express(),
+db = require('./lib/db.js'),
+port = config.server.port || 3000;
 
 module.exports = app; // for testing
 /*
 var swaggerConfig = {
   appRoot: __dirname 
 };*/
+
+
 config.appRoot = __dirname; // required config for swagger
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {

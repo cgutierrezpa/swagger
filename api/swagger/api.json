@@ -1,0 +1,35 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "0.0.1",
+		"title": "FlockIt"
+	},
+	"host": "localhost:3000",
+	"basePath": "/",
+	"tags": [
+		{
+			"name": "service",
+			"description": "Operations regarding the creation and administration of services.",
+			"externalDocs": {
+				"description": "Find out more",
+				"url": "http://swagger.io"
+			}
+		}
+	],
+	"schemes": [
+		"http",
+		"https"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"produces": [
+		"application/json"
+	],
+	"definitions": {
+		"$ref" : "./definitions/index.json"
+	},
+	"paths": {
+		"$ref" : "./paths/index.json"
+	}
+}

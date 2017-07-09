@@ -1,35 +1,38 @@
 {
-  "x-swagger-router-controller": "service",
-  "post": {
-    "tags": [
-      "service"
-    ],
-    "description": "Creates a service",
-    "operationId": "create",
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "Pet object that needs to be added to the store",
-        "required": true,
-        "schema": {
-          "$ref": "#/definitions/Service"
+    "Service" : {
+      "x-swagger-router-controller": "service",
+      "post": {
+        "tags": [
+          "service"
+      ],
+        "description": "Creates a service",
+        "operationId": "create",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Pet object that needs to be added to the store",
+            "required": true,
+            "schema": {
+                "$ref": "../definitions/service.json#/Service"
+            }
         }
-      }
     ],
-    "responses": {
-      "200": {
-        "description": "Success",
-        "schema": {
-          "$ref": "#/definitions/CreateServiceResponse"
-        }
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "../definitions/service.json#/CreateServiceResponse"
+          }
       },
       "default": {
         "description": "Error",
         "schema": {
-          "$ref": "#/definitions/ErrorResponse"
-        }
+          "$ref": "../definitions/error.json#/ErrorResponse"
       }
-    }
   }
+}
+}
+}
+
 }

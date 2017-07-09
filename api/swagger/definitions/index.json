@@ -1,5 +1,11 @@
 {
-  "Service": {
-    "$ref": "./service.yaml"
-  }
+	"Service" : {
+		"$ref" : "service.json#/Service"
+	},
+	"CreateServiceResponse" : {
+      "$ref" : "service.json#/CreateServiceResponse"
+    },
+    "Error" : {
+    	"$ref" : "error.json#/ErrorResponse"
+    }
 }
