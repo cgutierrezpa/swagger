@@ -1,0 +1,8 @@
+{
+  "/service": {
+    "$ref": "./paths/service.json",
+    "/swagger": {
+      "x-swagger-pipe": "swagger_raw"
+    }
+  }
+}

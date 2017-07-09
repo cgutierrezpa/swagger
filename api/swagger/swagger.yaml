@@ -1,23 +1,19 @@
-swagger: "2.0"
+---
+swagger: '2.0'
 info:
-  version: "0.0.1"
+  version: 0.0.1
   title: FlockIt
-# during dev, should point to your local machine
 host: localhost:3000
-# basePath prefixes all resource paths 
-basePath: /
+basePath: "/"
 schemes:
-  # tip: remove http to make production-grade
-  - http
-  - https
-# format of bodies a client can send (Content-Type)
+- http
+- https
 consumes:
-  - application/json
-# format of the responses to the client (Accepts)
+- application/json
 produces:
-  - application/json
+- application/json
 paths:
-  $ref: ./paths/index.yaml
-# complex objects have schema definitions
+  "$ref": "./paths/index.json"
 definitions:
-  $ref: ./definitions/index.yaml
+  "$ref": "./definitions/index.json"
+

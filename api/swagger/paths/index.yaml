@@ -1,4 +1,0 @@
-/service:
-    $ref: ./service.yaml
-    /swagger:
-        x-swagger-pipe: swagger_raw
