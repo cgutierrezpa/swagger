@@ -5,7 +5,7 @@
 		"title": "FlockIt"
 	},
 	"host": "localhost:3000",
-	"basePath": "/",
+	"basePath": "/api",
 	"tags": [
 		{
 			"name": "service",
