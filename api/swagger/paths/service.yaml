@@ -12,15 +12,15 @@ post:
         description: "Pet object that needs to be added to the store"
         required: true
         schema:
-          $ref: "#/definitions/Service"
+          $ref: "../definitions/service.yaml#/definitions/Service"
           responses:
             "200":
               description: Success
               schema:
             # a pointer to a definition
-            $ref: "#/definitions/CreateServiceResponse"
+            $ref: "../definitions/service.yaml#/definitions/CreateServiceResponse"
         # responses may fall through to errors
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"
+            #$ref: "#/definitions/ErrorResponse"

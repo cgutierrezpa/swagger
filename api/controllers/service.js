@@ -45,16 +45,18 @@ module.exports = {
 						throw err;
 					}
 
-					connection.query('INSERT INTO ' + db.tables.service + ' SET ?', req.body, function(err, result) {
+					connection.query('INSERT INTO ' + db.tables.service + ' SET ?', req.swagger.params.body, function(err, result) {
 						if(err){
 							connection.rollback(function(){
 								res.status(500).send("Internal server error.\n");
 								throw err;
 							});
 						}
+
 						/* Este método 'create' no recibirá datos de la descripción del servicio, se creará una entrada con una
 						descripción vacía en la tabla relacional t_agency_service_description, y se modificará la descripción por
 						medio de una llamada a updateDescription desde el front */
+
 						connection.query('INSERT INTO ' + db.tables.service_description +
 							' (fk_agency_service, tx_description) VALUES (?,"")', result.insertId, function(err, result){
 							if(err){
