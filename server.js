@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 var SwaggerExpress = require('swagger-express-mw'),
 env = process.env.NODE_ENV || 'test',
 config = require('./config/config.js')[env],
@@ -7,19 +7,13 @@ app = express(),
 db = require('./lib/db.js'),
 port = config.server.port || 3000;
 
-module.exports = app; // for testing
-/*
-var swaggerConfig = {
-  appRoot: __dirname 
-};*/
+module.exports = app; // Required to perform tests over the API
 
-
-config.appRoot = __dirname; // required config for swagger
+config.appRoot = __dirname; // Required by the Swagger specification.
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
 	if (err) { throw err; }
-
-	// install middleware
+	
 	swaggerExpress.register(app);
 
   	db.connect(function(err) {
