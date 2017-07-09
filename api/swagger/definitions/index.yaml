@@ -1,0 +1,2 @@
+Service:
+  $ref: ./service.yaml

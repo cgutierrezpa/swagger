@@ -1,0 +1,26 @@
+# binds a127 app logic to a route
+x-swagger-router-controller: service
+post:
+  tags:
+    - "service"
+    description: Creates a service
+      # used as the method name of the controller
+      operationId: create
+      parameters:
+        - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Service"
+          responses:
+            "200":
+              description: Success
+              schema:
+            # a pointer to a definition
+            $ref: "#/definitions/CreateServiceResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
