@@ -4,8 +4,11 @@ env = process.env.NODE_ENV || 'test',
 config = require('./config/config.js')[env],
 express = require('express'),
 app = express(),
+cors = require('cors'),
 db = require('./lib/db.js'),
 port = config.server.port || 3000;
+
+app.use(cors()); //Required to enable CORS in all requests (used by Swagger UI)
 
 module.exports = app; // Required to perform tests over the API
 

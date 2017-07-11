@@ -11,7 +11,7 @@
       },
       "fk_provider": {
         "type": "integer",
-        "example": "uint32"
+        "format": "uint32"
       },
       "tx_name": {
         "type": "string"

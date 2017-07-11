@@ -14,6 +14,7 @@
   "dependencies": {
     "bcrypt": "^1.0.2",
     "bluebird": "^3.5.0",
+    "cors": "^2.8.3",
     "express": "^4.12.3",
     "fs": "0.0.1-security",
     "json-refs": "^3.0.0",
