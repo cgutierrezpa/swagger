@@ -7,18 +7,22 @@
     ],
     "properties": {
       "tx_cif": {
-        "type": "string"
+        "type": "string",
+        "example": "A05732B"
       },
       "fk_provider": {
         "type": "integer",
-        "format": "uint32"
+        "format": "uint32",
+        "example": 1
       },
       "tx_name": {
-        "type": "string"
+        "type": "string",
+        "example": "Test service"
       },
       "fk_headquarters": {
         "type": "integer",
-        "format": "uint32"
+        "format": "uint32",
+        "example": 1
       },
       "url_main_image": {
         "type": "string"
