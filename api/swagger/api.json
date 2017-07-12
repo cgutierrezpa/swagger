@@ -6,16 +6,9 @@
 	},
 	"host": "localhost:3000",
 	"basePath": "/",
-	"tags": [
-		{
-			"name": "service",
-			"description": "Operations regarding the creation and administration of services.",
-			"externalDocs": {
-				"description": "Find out more",
-				"url": "http://swagger.io"
-			}
-		}
-	],
+	"tags": {
+		"$ref": "./tags.json"
+	},
 	"schemes": [
 		"http",
 		"https"

@@ -1,0 +1,15 @@
+[
+	{
+		"name": "Service",
+		"description": "Operations regarding the creation and administration of services."
+	},
+	{
+		"name": "User",
+		"description": "Operations regarding the creation and administration of users."
+	},
+	{
+		"name": "Event",
+		"description": "Operations regarding the creation and administration of events."
+	},
+
+]
