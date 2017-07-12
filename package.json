@@ -24,18 +24,19 @@
     "nodemailer": "^4.0.1",
     "nodemon": "^1.11.0",
     "path": "^0.12.7",
-    "swagger-express-mw": "^0.1.0"
+    "swagger-express-mw": "^0.1.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "should": "^7.1.0",
-    "supertest": "^1.0.0"
+    "supertest": "^3.0.0"
   },
   "scripts": {
     "start": "NODE_ENV=test nodemon server.js",
     "start-dev": "NODE_ENV=development node server.js",
     "start-prod": "NODE_ENV=production node server.js",
-    "edit": "swagger_swagger_fileName=api/swagger/swagger.json swagger project edit",
-    "test": "swagger project test",
-    "build-api": "node lib/apiBuilder.js"
+    "edit": "swagger project edit",
+    "test": "NODE_ENV=test swagger project test",
+    "build-api": "node lib/apiBuilder.js && json2yaml api/swagger/swagger.json > api/swagger/swagger.yaml"
   }
 }
