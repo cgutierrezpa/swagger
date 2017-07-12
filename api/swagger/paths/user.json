@@ -1,0 +1,33 @@
+{
+  "User" : {
+    "x-swagger-router-controller": "user",
+    "get": {
+      "tags": [
+        "user"
+      ],
+      "parameters": [{
+        "name": "userId",
+        "in": "path",
+        "required": true,
+        "type": "integer",
+        "format": "uint32"
+      }],
+      "description": "Retrieves a user",
+      "operationId": "findById",
+      "responses": {
+        "200": {
+          "description": "Success",
+          "schema": {
+            "$ref": "../definitions/user.json#/UsersArray"
+          }
+        },
+        "default": {
+          "description": "Error",
+          "schema": {
+            "$ref": "../definitions/error.json#/ErrorResponse"
+          }
+        }
+      }
+    }
+  }
+}

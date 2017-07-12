@@ -18,7 +18,7 @@ module.exports = {
 	findByProvider : function(req, res, done){
 		db.get().query('SELECT * FROM ' + db.tables.service + ' WHERE _id = ? AND is_active = 1', req.params.id, function(err, rows){
 			if(err){
-				res.status(500).json({"message":"Internal server error.\n"});
+				res.status(500).json({"message": "Internal server error.\n"});
 				return done(err);
 			}
 			if (rows.length == 0){
@@ -35,13 +35,13 @@ module.exports = {
 		try{
 			db.get().getConnection(function(err, connection){
 				if(err){
-					res.status(500).json({"message":"Internal server error.\n"});
+					res.status(500).json({"message": "Internal server error.\n"});
 					throw err;
 				}
 				
 				connection.beginTransaction(function(err){
 					if(err){
-						res.status(500).json({"message":"Internal server error.\n"});
+						res.status(500).json({"message": "Internal server error.\n"});
 						throw err;
 					}
 
@@ -51,7 +51,7 @@ module.exports = {
 
 						if(err){
 							connection.rollback(function(){
-								res.status(500).json({"message":"Internal server error.\n"});
+								res.status(500).json({"message": "Internal server error.\n"});
 								throw err;
 							});
 						}else{ 
@@ -65,7 +65,7 @@ module.exports = {
 							' (fk_agency_service, tx_description) VALUES (?,"")', serviceId, function(err, result){
 							if(err){
 								connection.rollback(function(){
-									res.status(500).json({"message":"Internal server error.\n"});
+									res.status(500).json({"message": "Internal server error.\n"});
 									throw err;
 								});
 							}
@@ -73,7 +73,7 @@ module.exports = {
 							connection.commit(function(err){
 								if(err){
 									connection.rollback(function(){
-										res.status(500).json({"message":"Internal server error.\n"});
+										res.status(500).json({"message": "Internal server error.\n"});
 										throw err;
 									});
 								}
@@ -95,7 +95,7 @@ module.exports = {
 			' SET ? WHERE _id = ? AND fk_provider = ?',
 			[req.body, req.body._id, req.authInfo._id], function(err, result){
 				if(err){
-					res.status(500).json({"message":"Internal server error.\n"});
+					res.status(500).json({"message": "Internal server error.\n"});
 					throw err;
 				}
 				if(result.affectedRows == 0){
@@ -111,7 +111,7 @@ module.exports = {
 			'SET ? WHERE service.fk_provider = ?',
 			[req.body, req.authInfo._id], function(err, result){
 				if(err){
-					res.status(500).json({"message":"Internal server error.\n"});
+					res.status(500).json({"message": "Internal server error.\n"});
 					throw err;
 				}
 				if(result.affectedRows == 0){

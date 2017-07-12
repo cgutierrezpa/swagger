@@ -1,0 +1,61 @@
+{ 
+  "UsersArray": {
+    "type": "array",
+    "items": {
+      "$ref" : "#/User"
+    }
+  },
+  "User": {
+    "type": "object",
+    "required": [
+      "tx_email",
+      "fk_place"
+    ],
+    "properties": {
+      "tx_email": {
+        "type": "string",
+        "example": "rubenlopezlozoya12@gmail.com"
+      },
+      "tx_name": {
+        "type": "string",
+        "example": "Ruben"
+      },
+      "url_profile_image": {
+        "type": "string",
+        "example": "/good_url.img"
+      },
+      "tx_bio": {
+        "type": "string",
+        "example": "Test bio"
+      },
+      "tx_gender": {
+        "type": "string",
+        "example": "M"
+      },
+      "dt_birthday": {
+        "type": "string",
+        "format": "dateTime",
+        "example": "1993-04-08T22:00:00.000Z"
+      },
+      "fk_place": {
+        "type": "integer",
+        "format": "uint32",
+        "example": 1
+      },
+      "n_rating": {
+        "type": "number",
+        "format": "double",
+        "example": 3.2
+      }
+    }
+  },
+  "CreateUserResponse": {
+    "type": "object",
+    "properties": {
+      "userId": {
+        "type": "integer",
+        "format": "uint32"
+      }
+    }
+  }
+}

@@ -2,6 +2,9 @@
 	"/service" : {
 		"$ref" : "service.json#/Service"
 	},
+	"/user/{userId}" : {
+		"$ref" : "user.json#/User"
+	},
 	"/swagger": {
 		"x-swagger-pipe": "swagger_raw"
 	}
