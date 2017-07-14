@@ -2,7 +2,6 @@
   "Service": {
     "type": "object",
     "required": [
-      "fk_provider",
       "tx_name"
     ],
     "properties": {

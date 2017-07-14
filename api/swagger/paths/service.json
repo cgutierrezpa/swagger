@@ -7,6 +7,11 @@
       ],
         "description": "Creates a service",
         "operationId": "create",
+        "security" : [
+          {
+          "Authorization": []
+          }
+        ],
         "parameters": [
           {
             "in": "body",

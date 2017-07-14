@@ -22,6 +22,14 @@
 	"definitions": {
 		"$ref" : "./definitions/index.json"
 	},
+	"securityDefinitions": {
+		"Authorization": {
+			"description": "Authentication token for restricted operations",
+			"type" : "apiKey",
+			"name" : "Authorization",
+			"in" : "header"
+		}
+	},
 	"paths": {
 		"$ref" : "./paths/index.json"
 	}
