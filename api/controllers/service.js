@@ -31,7 +31,7 @@ module.exports = {
 	},
 
 	create : function(req, res, done) {
-		//req.body.fk_provider = req.authInfo._id;
+		req.body.fk_provider = req.authInfo._id;
 		try{
 			db.get().getConnection(function(err, connection){
 				if(err){
