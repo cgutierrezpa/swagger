@@ -3,7 +3,7 @@
       "x-swagger-router-controller": "service",
       "post": {
         "tags": [
-          "service"
+          "Service"
       ],
         "description": "Creates a service",
         "operationId": "create",

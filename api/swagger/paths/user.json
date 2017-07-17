@@ -3,7 +3,7 @@
     "x-swagger-router-controller": "user",
     "get": {
       "tags": [
-        "user"
+        "User"
       ],
       "parameters": [{
         "name": "userId",
