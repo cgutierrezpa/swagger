@@ -130,6 +130,24 @@
       }
     }
   },
+  "UpdateServiceDescription": {
+    "type": "object",
+    "required": [
+      "fk_agency_service",
+      "tx_description"
+    ],
+    "properties": {
+      "fk_agency_service": {
+        "type": "integer",
+        "format": "uint32",
+        "example": 1
+      },
+      "tx_description": {
+        "type": "string",
+        "example": "This is a description"
+      }
+    }
+  },
   "CreateServiceResponse": {
     "type": "object",
     "required": [

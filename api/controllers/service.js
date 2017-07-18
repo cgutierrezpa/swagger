@@ -70,8 +70,9 @@ module.exports = {
 	},
 
 	updateService: function(req, res){
-		db.get().queryAsync('UPDATE ' +  db.tables.service +
-			' SET ? WHERE _id = ? AND fk_provider = ?',[req.swagger.params.body.value, req.swagger.params.body.value._id, req.authInfo._id])
+		console.log(req.swagger);
+		db.get().queryAsync('UPDATE ' +  db.tables.service +' SET ? WHERE _id = ? AND fk_provider = ?',
+			[req.swagger.params.body.value, req.swagger.params.body.value._id, req.authInfo._id])
 		.then(function(result){
 			if(result.affectedRows == 0){
 				return res.status(404).json({"message": "Service not found."});
@@ -83,19 +84,19 @@ module.exports = {
 		});
 	},
 
-	updateDescription : function(req, res, done){
+	updateServiceDescription : function(req, res){
 		db.get().queryAsync('UPDATE ' + db.tables.service_description + ' AS description ' +
 			'JOIN ' + db.tables.service + ' AS service ON description.fk_agency_service = service._id ' +
-			'SET ? WHERE service.fk_provider = ?',
-			[req.swagger.params.body, req.authInfo._id], function(err, result){
-				if(err){
-					res.status(500).json({"message": "Internal server error."});
-					throw err;
-				}
-				if(result.affectedRows == 0){
-					return res.status(404).json({"message": "Service not found."});
-				}
-				return res.status(200).json(result);
+			'SET ? WHERE service.fk_provider = ? AND service._id = ?',
+			[req.swagger.params.body.value, req.authInfo._id, req.swagger.params.body.value.fk_agency_service])
+		.then(function(result){
+			if(result.affectedRows == 0){
+				return res.status(404).json({"message": "Service not found."});
+			}
+			return res.status(200).json(result);
+		})
+		.catch(function(err){
+			errorHandler.internalServer(res, err);
 		});
 	}
 /*

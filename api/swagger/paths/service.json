@@ -79,6 +79,49 @@
       }
     }
   },
+  "UpdateServiceDescription": {
+    "tags": [
+      "Service"
+    ],
+    "description": "Updates the description of a service",
+    "operationId": "updateServiceDescription",
+    "security": [
+      {
+        "Authorization": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "body",
+        "name": "body",
+        "description": "Updates the description of service passed in the body",
+        "required": true,
+        "schema": {
+          "$ref": "../definitions/service.json#/UpdateServiceDescription"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Success",
+        "schema": {
+          "$ref": "../definitions/generic.json#/UpdateResponse"
+        }
+      },
+      "404": {
+        "description": "Service not found",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      },
+      "500": {
+        "description": "Error",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      }
+    }
+  },
   "GetServiceByProvider": {
     "tags": [
       "Service"

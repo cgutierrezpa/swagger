@@ -11,6 +11,9 @@
 	"UpdateService" : {
 		"$ref" : "service.json#/UpdateService"
 	},
+	"UpdateServiceDescription" : {
+		"$ref" : "service.json#/UpdateServiceDescription"
+	},
 	"UsersArray": {
 		"$ref" : "user.json#/UsersArray"
 	},
