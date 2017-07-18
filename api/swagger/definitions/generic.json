@@ -1,0 +1,37 @@
+{
+  "UpdateResponse": {
+    "type": "object",
+    "properties": {
+      "fieldCount": {
+        "type": "integer",
+        "format": "uint32"
+      },
+      "affectedRows": {
+        "type": "integer",
+        "format": "uint32"
+      },
+      "insertId": {
+        "type": "integer",
+        "format": "uint32"
+      },
+      "serverStatus": {
+        "type": "integer",
+        "format": "uint32"
+      },
+      "warningCount": {
+        "type": "integer",
+        "format": "uint32"
+      },
+      "message": {
+        "type": "string"
+      },
+      "protocol41": {
+        "type": "boolean"
+      },
+      "changedRows": {
+        "type": "integer",
+        "format": "uint32"
+      }
+    }
+  }
+}

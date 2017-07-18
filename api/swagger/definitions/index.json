@@ -34,5 +34,8 @@
     },
     "LoginResponse": {
     	"$ref" : "authentication.json#/LoginResponse"
+    },
+    "UpdateResponse": {
+    	"$ref" : "generic.json#/UpdateResponse"
     }
 }
