@@ -5,6 +5,12 @@
 			"$ref" : "service.json#/CreateService"
 		}
 	},
+	"/service/update" : {
+		"x-swagger-router-controller": "service",
+		"put": {
+			"$ref" : "service.json#/UpdateService"
+		}
+	},
 	"/service/findByProvider/{providerId}" : {
 		"x-swagger-router-controller": "service",
 		"get": {

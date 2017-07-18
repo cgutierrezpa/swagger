@@ -8,6 +8,9 @@
 	"Service" : {
 		"$ref" : "service.json#/Service"
 	},
+	"UpdateService" : {
+		"$ref" : "service.json#/UpdateService"
+	},
 	"UsersArray": {
 		"$ref" : "user.json#/UsersArray"
 	},

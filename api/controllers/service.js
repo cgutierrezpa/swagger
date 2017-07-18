@@ -6,16 +6,16 @@ module.exports = {
 	/* Public methods */
 /*
 	findAll : function(req, res, done){
-		db.get().query('SELECT * FROM ' + db.tables.service + ' WHERE is_active = 1', function(err, rows){
+		db.get().queryAsync('SELECT * FROM ' + db.tables.service + ' WHERE is_active = 1', function(err, rows){
 			if(err){
-				res.status(500).json({"message":"Internal server error.\n"});
+				res.status(500).json({"message":"Internal server error."});
 			}
 			res.status(200).json(rows);
 			done();
 		});
 	},
 */
-	findByProvider : function(req, res, done){
+	findServiceByProvider : function(req, res){
 		//Hay que mejorarlo y hacer una comprobacion previa de que el provider esté activo, o con un JOIN seria suficiente
 		db.get().queryAsync('SELECT * FROM ' + db.tables.service + ' WHERE fk_provider = ? AND is_active = 1',
 		 req.swagger.params.providerId.value, function(err, rows){
@@ -29,102 +29,71 @@ module.exports = {
 				delete row.dt_create_timestamp;
 			});
 
-			console.log(rows);
-
-			res.status(200).json(rows);
-			done();
+			return res.status(200).json(rows);
 		})
 		.catch(function(err){
-			errorhandler.internalServer(res, err);
+			errorHandler.internalServer(res, err);
 		});
 	},
 
-	createService : function(req, res, done) {
+	createService : function(req, res) {
 		req.body.fk_provider = req.authInfo._id;
-		try{
-			db.get().getConnection(function(err, connection){
-				if(err){
-					res.status(500).json({"message": "Internal server error.\n"});
-					throw err;
-				}
-				
-				connection.beginTransaction(function(err){
-					if(err){
-						res.status(500).json({"message": "Internal server error.\n"});
-						throw err;
-					}
+		var connection, serviceId;
 
-					connection.query('INSERT INTO ' + db.tables.service + ' SET ?', req.swagger.params.body.value, function(err, result) {
-						/* We need to create an if-else structure because connection.rollback is asynchronous, hence even if an err is raised, 
-							the next query will be performer and we will not be able to see that the error comes from the first query */
+		db.get().getConnectionAsync()
+		.then(function(dbConnection){
+			connection = dbConnection;
+			return connection.beginTransaction();
+		})
+		.then(function(){
+			return connection.queryAsync('INSERT INTO ' + db.tables.service + ' SET ?', req.swagger.params.body.value);
+		})
+		.then(function(result){
+			serviceId = result.insertId;
 
-						if(err){
-							connection.rollback(function(){
-								res.status(500).json({"message": "Internal server error.\n"});
-								throw err;
-							});
-						}else{ 
-							/* Este método 'create' no recibirá datos de la descripción del servicio, se creará una entrada con una
-						descripción vacía en la tabla relacional t_agency_service_description, y se modificará la descripción por
-						medio de una llamada a updateDescription desde el front */
-
-							let serviceId = result.insertId;
-
-							connection.query('INSERT INTO ' + db.tables.service_description +
-							' (fk_agency_service, tx_description) VALUES (?,"")', serviceId, function(err, result){
-							if(err){
-								connection.rollback(function(){
-									res.status(500).json({"message": "Internal server error.\n"});
-									throw err;
-								});
-							}
-
-							connection.commit(function(err){
-								if(err){
-									connection.rollback(function(){
-										res.status(500).json({"message": "Internal server error.\n"});
-										throw err;
-									});
-								}
-								connection.release();
-								return res.status(200).json({"serviceId": serviceId});
-							});
-						});
-						}
-					});
-				});
-			});
-		}catch(err){
-			errorhandler.internalServer(res, err);
-		}	
+			return connection.queryAsync('INSERT INTO ' + db.tables.service_description + 
+				' (fk_agency_service, tx_description) VALUES (?,"")', serviceId);
+		})
+		.then(function(result){
+			return connection.commit();
+		})
+		.then(function(){
+			connection.release();
+			return res.status(200).json({"serviceId": serviceId});
+		})
+		.catch(function(err){
+			if (connection != undefined){
+				connection.rollback();
+			}
+			errorHandler.internalServer(res, err);
+		});
 	},
 
-	update: function(req, res, done){
-		db.get().query('UPDATE ' +  db.tables.service +
-			' SET ? WHERE _id = ? AND fk_provider = ?',
-			[req.body, req.body._id, req.authInfo._id], function(err, result){
-				if(err){
-					res.status(500).json({"message": "Internal server error.\n"});
-					throw err;
-				}
-				if(result.affectedRows == 0){
-					return res.status(404).json("Service not found.\n");
-				}
-				return res.status(200).json(result);
+	updateService: function(req, res){
+		db.get().queryAsync('UPDATE ' +  db.tables.service +
+			' SET ? WHERE _id = ? AND fk_provider = ?',[req.body, req.body._id, req.authInfo._id])
+		.then(function(result){
+			if(result.affectedRows == 0){
+				return res.status(404).json({"message": "Service not found."});
+			}
+			return res.status(200).json(result);
+		})
+		.catch(function(err){
+			errorHandler.internalServer(res, err);
 		});
 	},
 
 	updateDescription : function(req, res, done){
-		db.get().query('UPDATE ' + db.tables.service_description + ' AS description ' +
+		db.get().queryAsync('UPDATE ' + db.tables.service_description + ' AS description ' +
 			'JOIN ' + db.tables.service + ' AS service ON description.fk_agency_service = service._id ' +
 			'SET ? WHERE service.fk_provider = ?',
 			[req.body, req.authInfo._id], function(err, result){
 				if(err){
-					res.status(500).json({"message": "Internal server error.\n"});
+					res.status(500).json({"message": "Internal server error."});
 					throw err;
 				}
 				if(result.affectedRows == 0){
-					return res.status(404).json("Service not found.\n");
+					return res.status(404).json({"message": "Service not found."});
 				}
 				return res.status(200).json(result);
 		});
@@ -132,9 +101,9 @@ module.exports = {
 /*
 
 	delete : function(req, res, done) {
-		db.get().query('UPDATE ' + db.tables.service + ' SET is_active = 0 WHERE _id = ? ', req.params.id, function (err, rows) {
+		db.get().queryAsync('UPDATE ' + db.tables.service + ' SET is_active = 0 WHERE _id = ? ', req.params.id, function (err, rows) {
 			if(err){
-				res.status(500).json({"message":"Internal server error.\n"});
+				res.status(500).json({"message":"Internal server error."});
 				return done(err);
 			}
 			res.status(200).json();

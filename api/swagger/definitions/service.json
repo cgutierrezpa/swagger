@@ -80,6 +80,38 @@
       }
     }
   },
+  "UpdateService": {
+    "type": "object",
+    "required": [
+      "_id"
+    ],
+    "properties": {
+      "_id": {
+        "type": "integer",
+        "format": "uint32",
+        "example": 2
+      },
+      "tx_cif": {
+        "type": "string",
+        "example": "A05732B"
+      },
+      "tx_name": {
+        "type": "string",
+        "example": "Test service"
+      },
+      "fk_headquarters": {
+        "type": "integer",
+        "format": "uint32",
+        "example": 1
+      },
+      "url_main_image": {
+        "type": ["string", "null"]
+      },
+      "url_main_video": {
+        "type": ["string", "null"]
+      }
+    }
+  },
   "CreateServiceResponse": {
     "type": "object",
     "required": [
