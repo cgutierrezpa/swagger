@@ -1,0 +1,40 @@
+{
+  "Login": {
+    "tags": [
+      "Authentication"
+    ],
+    "description": "Logs in a registered user",
+    "operationId": "login",
+    "parameters": [
+      {
+        "in": "body",
+        "name": "body",
+        "description": "Credentials of a registered user (email & password)",
+        "required": true,
+        "schema": {
+          "$ref": "../definitions/authentication.json#/LoginForm"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Success",
+        "schema": {
+          "$ref": "../definitions/authentication.json#/LoginResponse"
+        }
+      },
+      "404": {
+        "description": "User not found",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      },
+      "500": {
+        "description": "Error",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      }
+    }
+  }
+}

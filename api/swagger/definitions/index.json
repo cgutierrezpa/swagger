@@ -1,12 +1,21 @@
 {
+	"ServicesArray" : {
+		"$ref" : "service.json#/ServicesArray"
+	},
+	"FetchedService" : {
+		"$ref" : "service.json#/FetchedService"
+	},
 	"Service" : {
 		"$ref" : "service.json#/Service"
 	},
 	"UsersArray": {
 		"$ref" : "user.json#/UsersArray"
 	},
-	"User" : {
-		"$ref" : "user.json#/User"
+	"FetchedUser" : {
+		"$ref" : "user.json#/FetchedUser"
+	},
+	"RegisterUserObject" : {
+		"$ref" : "user.json#/RegisterUserObject"
 	},
 	"CreateUserResponse" : {
 		"$ref" : "user.json#/CreateUserResponse"
@@ -16,5 +25,11 @@
     },
     "Error" : {
     	"$ref" : "error.json#/ErrorResponse"
+    },
+    "LoginForm": {
+    	"$ref" : "authentication.json#/LoginForm"
+    },
+    "LoginResponse": {
+    	"$ref" : "authentication.json#/LoginResponse"
     }
 }

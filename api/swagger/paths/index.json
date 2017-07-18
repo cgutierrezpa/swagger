@@ -1,9 +1,33 @@
 {
 	"/service" : {
-		"$ref" : "service.json#/Service"
+		"x-swagger-router-controller": "service",
+		"post": {
+			"$ref" : "service.json#/CreateService"
+		}
+	},
+	"/service/findByProvider/{providerId}" : {
+		"x-swagger-router-controller": "service",
+		"get": {
+			"$ref" : "service.json#/GetServiceByProvider"
+		}
 	},
 	"/user/{userId}" : {
-		"$ref" : "user.json#/User"
+		"x-swagger-router-controller": "user",
+		"get": {
+			"$ref" : "user.json#/GetUser"
+		}
+	},
+	"/user" : {
+		"x-swagger-router-controller": "user",
+		"post": {
+			"$ref" : "user.json#/CreateUser"
+		}
+	},
+	"/auth/login" : {
+		"x-swagger-router-controller": "authentication",
+		"post": {
+			"$ref" : "authentication.json#/Login"
+		}
 	},
 	"/swagger": {
 		"x-swagger-pipe": "swagger_raw"

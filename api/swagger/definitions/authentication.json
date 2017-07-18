@@ -1,0 +1,30 @@
+{
+  "LoginForm": {
+    "type": "object",
+    "required": [
+      "tx_email",
+      "tx_password"
+    ],
+    "properties": {
+      "tx_email": {
+        "type": "string",
+        "example": "rubenlopezlozoya12@gmail.com"
+      },
+      "tx_password": {
+        "type": "string",
+        "example": "Ruben1234"
+      }
+    }
+  },
+  "LoginResponse": {
+    "type": "object",
+    "required": [
+      "token"
+    ],
+    "properties": {
+      "token": {
+        "type": "string"
+      }
+    }
+  }
+}
