@@ -1,43 +1,75 @@
 {
-    "Service" : {
-      "x-swagger-router-controller": "service",
-      "post": {
-        "tags": [
-          "Service"
-      ],
-        "description": "Creates a service",
-        "operationId": "create",
-        "security" : [
-          {
-          "Authorization": []
-          }
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Service object that needs to be added to the database",
-            "required": true,
-            "schema": {
-                "$ref": "../definitions/service.json#/Service"
-            }
-        }
+  "CreateService": {
+    "tags": [
+      "Service"
     ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "../definitions/service.json#/CreateServiceResponse"
-          }
+    "description": "Creates a service",
+    "operationId": "createService",
+    "security": [
+      {
+        "Authorization": []
+      }
+    ],
+    "parameters": [
+      {
+        "in": "body",
+        "name": "body",
+        "description": "Service object that needs to be added to the database",
+        "required": true,
+        "schema": {
+          "$ref": "../definitions/service.json#/Service"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Success",
+        "schema": {
+          "$ref": "../definitions/service.json#/CreateServiceResponse"
+        }
       },
-      "default": {
+      "500": {
         "description": "Error",
         "schema": {
           "$ref": "../definitions/error.json#/ErrorResponse"
+        }
       }
+    }
+  },
+  "GetServiceByProvider": {
+    "tags": [
+      "Service"
+    ],
+    "parameters": [
+      {
+        "name": "providerId",
+        "in": "path",
+        "required": true,
+        "type": "integer",
+        "format": "uint32"
+      }
+    ],
+    "description": "Retrieves an array of services offered by an active provider",
+    "operationId": "findByProvider",
+    "responses": {
+      "200": {
+        "description": "Success",
+        "schema": {
+          "$ref": "../definitions/service.json#/ServicesArray"
+        }
+      },
+      "404": {
+        "description": "Service not found",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      },
+      "500": {
+        "description": "Error",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      }
+    }
   }
-}
-}
-}
-
 }

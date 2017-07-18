@@ -10,27 +10,36 @@ module.exports = {
 			if(err){
 				res.status(500).json({"message":"Internal server error.\n"});
 			}
-			res.status(200).send(rows);
+			res.status(200).json(rows);
 			done();
 		});
 	},
 */
 	findByProvider : function(req, res, done){
-		db.get().query('SELECT * FROM ' + db.tables.service + ' WHERE _id = ? AND is_active = 1', req.params.id, function(err, rows){
-			if(err){
-				res.status(500).json({"message": "Internal server error.\n"});
-				return done(err);
-			}
+		//Hay que mejorarlo y hacer una comprobacion previa de que el provider esté activo, o con un JOIN seria suficiente
+		db.get().queryAsync('SELECT * FROM ' + db.tables.service + ' WHERE fk_provider = ? AND is_active = 1',
+		 req.swagger.params.providerId.value, function(err, rows){
 			if (rows.length == 0){
-				res.status(404).send("Service not found.\n");
+				res.status(404).json({"message": "Service not found."});
 				return done();
 			}
-			res.status(200).send(rows);
+			rows.forEach(function(row){
+				delete row.is_draft;
+				delete row.is_active;
+				delete row.dt_create_timestamp;
+			});
+
+			console.log(rows);
+
+			res.status(200).json(rows);
 			done();
+		})
+		.catch(function(err){
+			errorhandler.internalServer(res, err);
 		});
 	},
 
-	create : function(req, res, done) {
+	createService : function(req, res, done) {
 		req.body.fk_provider = req.authInfo._id;
 		try{
 			db.get().getConnection(function(err, connection){
@@ -99,9 +108,9 @@ module.exports = {
 					throw err;
 				}
 				if(result.affectedRows == 0){
-					return res.status(404).send("Service not found.\n");
+					return res.status(404).json("Service not found.\n");
 				}
-				return res.status(200).send(result);
+				return res.status(200).json(result);
 		});
 	},
 
@@ -115,9 +124,9 @@ module.exports = {
 					throw err;
 				}
 				if(result.affectedRows == 0){
-					return res.status(404).send("Service not found.\n");
+					return res.status(404).json("Service not found.\n");
 				}
-				return res.status(200).send(result);
+				return res.status(200).json(result);
 		});
 	}
 /*
@@ -128,7 +137,7 @@ module.exports = {
 				res.status(500).json({"message":"Internal server error.\n"});
 				return done(err);
 			}
-			res.status(200).send();
+			res.status(200).json();
 			done();
 		})
 	},
