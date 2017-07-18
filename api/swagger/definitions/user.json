@@ -1,15 +1,16 @@
-{ 
+{
   "UsersArray": {
     "type": "array",
     "items": {
-      "$ref" : "#/User"
+      "$ref": "#/FetchedUser"
     }
   },
-  "User": {
+  "FetchedUser": {
     "type": "object",
     "required": [
       "tx_email",
-      "fk_place"
+      "tx_name",
+      "dt_birthday"
     ],
     "properties": {
       "tx_email": {
@@ -21,26 +22,48 @@
         "example": "Ruben"
       },
       "url_profile_image": {
-        "type": "string",
+        "type": [
+          "string",
+          "null"
+        ],
         "example": "/good_url.img"
       },
       "tx_bio": {
-        "type": "string",
+        "type": [
+          "string",
+          "null"
+        ],
         "example": "Test bio"
       },
       "tx_gender": {
-        "type": "string",
+        "type": [
+          "string",
+          "null"
+        ],
         "example": "M"
+      },
+      "fk_place": {
+        "type": [
+          "integer"
+        ],
+        "format": "uint32",
+        "example": 1
+      },
+      "tx_phone": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "example": "612613987"
       },
       "dt_birthday": {
         "type": "string",
-        "format": "dateTime",
+        "format": "date-time",
         "example": "1993-04-08T22:00:00.000Z"
       },
-      "fk_place": {
+      "is_admin": {
         "type": "integer",
-        "format": "uint32",
-        "example": 1
+        "format": "uint32"
       },
       "n_rating": {
         "type": "number",
@@ -49,8 +72,54 @@
       }
     }
   },
+  "RegisterUserObject": {
+    "type": "object",
+    "required": [
+      "tx_name",
+      "tx_email",
+      "tx_password",
+      "dt_birthday"
+    ],
+    "properties": {
+      "tx_email": {
+        "type": "string",
+        "example": "rubenlopezlozoya12@gmail.com"
+      },
+      "tx_name": {
+        "type": "string",
+        "example": "Ruben"
+      },
+      "tx_password": {
+        "type": "string",
+        "example": "Ruben1234"
+      },
+      "tx_gender": {
+        "type": "string",
+        "example": "M",
+        "enum": [
+          "M",
+          "F",
+          "m",
+          "f"
+        ]
+      },
+      "dt_birthday": {
+        "type": "string",
+        "format": "date-time",
+        "example": "1993-04-08T22:00:00.000Z"
+      },
+      "fk_place": {
+        "type": "integer",
+        "format": "uint32",
+        "example": 1
+      }
+    }
+  },
   "CreateUserResponse": {
     "type": "object",
+    "required": [
+      "userId"
+    ],
     "properties": {
       "userId": {
         "type": "integer",
