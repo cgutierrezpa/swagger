@@ -39,7 +39,7 @@
     "tags": [
       "User"
     ],
-    "description": "Register a user",
+    "description": "Register a user and send a verification email",
     "operationId": "createUser",
     "parameters": [
       {
@@ -61,6 +61,49 @@
       },
       "409": {
         "description": "Email already exists",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      },
+      "500": {
+        "description": "Error",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      }
+    }
+  },
+  "UpdateUser": {
+    "tags": [
+      "User"
+    ],
+    "parameters": [
+      {
+        "in": "body",
+        "name": "body",
+        "description": "Updates an active user",
+        "required": true,
+        "schema": {
+          "$ref": "../definitions/user.json#/UpdateUserObject"
+        }
+      }
+    ],
+    "description": "Updates a user",
+    "operationId": "updateUser",
+    "security": [
+      {
+        "Authorization": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Success",
+        "schema": {
+          "$ref": "../definitions/generic.json#/UpdateResponse"
+        }
+      },
+      "404": {
+        "description": "User not found",
         "schema": {
           "$ref": "../definitions/error.json#/ErrorResponse"
         }

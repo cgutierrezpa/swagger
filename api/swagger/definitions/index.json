@@ -23,6 +23,9 @@
 	"RegisterUserObject" : {
 		"$ref" : "user.json#/RegisterUserObject"
 	},
+	"UpdateUserObject" : {
+		"$ref" : "user.json#/UpdateUserObject"
+	},
 	"CreateUserResponse" : {
 		"$ref" : "user.json#/CreateUserResponse"
 	},

@@ -105,13 +105,77 @@
       },
       "dt_birthday": {
         "type": "string",
-        "format": "date-time",
+        "format": "dateTime",
         "example": "1993-04-08T22:00:00.000Z"
       },
       "fk_place": {
         "type": "integer",
         "format": "uint32",
         "example": 1
+      }
+    }
+  },
+  "UpdateUserObject": {
+    "type": "object",
+    "required": [
+      "_id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "_id": {
+        "type": "integer",
+        "format": "uint32"
+      },
+      "tx_name": {
+        "type": "string",
+        "example": "Ruben"
+      },
+      "tx_gender": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "example": "M",
+        "enum": [
+          "M",
+          "F",
+          "m",
+          "f"
+        ]
+      },
+      "dt_birthday": {
+        "type": "string",
+        "format": "dateTime",
+        "example": "1993-04-08T22:00:00.000Z"
+      },
+      "fk_place": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "format": "uint32",
+        "example": 1
+      },
+      "tx_bio": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "example": "This is a bio"
+      },
+      "url_profile_image": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "example": "This is a bio"
+      },
+      "tx_phone": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "example": "616436819"
       }
     }
   },

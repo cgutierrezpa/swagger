@@ -4,7 +4,8 @@ bcrypt = require('bcrypt'),
 promise = require('bluebird'),
 crypto = promise.promisifyAll(require('crypto')),
 nodemailer = require('nodemailer'),
-moment = require('moment');
+moment = require('moment'),
+async = require('async');
 
 module.exports = {
 
@@ -40,7 +41,7 @@ module.exports = {
 		})
 	},
 
-	createUser : async function(req, res) {
+	create : async function(req, res) {
 		try{
 			let fetchedUser = await module.exports.findByEmail(req.swagger.params.body.value.tx_email);
 
@@ -102,17 +103,17 @@ module.exports = {
 	},
 
 	updateUser: function(req, res){
-		//Falta añadir validación para que el usuario no pueda cambiar su email
-		db.get().queryAsync('UPDATE ' + db.tables.user + ' SET ? WHERE _id = ? ', [req.swagger.params.body.value, req.authInfo._id]).then(function(rows) {
-			if (rows.length == 0){
+		db.get().queryAsync('UPDATE ' + db.tables.user + ' SET ? WHERE _id = ? AND is_active = 1',
+			[req.swagger.params.body.value, req.swagger.params.body.value._id, req.authInfo._id])
+		.then(function(result) {
+			if (result.affectedRows == 0){
 				return res.status(404).send({"message": "User not found."});
 			}
 
-			return res.status(200).send(rows);
+			return res.status(200).send(result);
 		})
 		.catch(function(err){
-			res.status(500).send({"message": "Internal server error."});
-			throw err;
+			errorhandler.internalServer(res, err);
 		})
 	},
 
