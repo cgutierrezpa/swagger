@@ -2,7 +2,7 @@
   "ServicesArray": {
     "type": "array",
     "items": {
-      "$ref" : "#/FetchedService"
+      "$ref": "#/FetchedService"
     }
   },
   "FetchedService": {
@@ -36,10 +36,16 @@
         "example": 1
       },
       "url_main_image": {
-        "type": ["string", "null"]
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "url_main_video": {
-        "type": ["string", "null"]
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "n_rating": {
         "type": "number",
@@ -73,10 +79,16 @@
         "example": 1
       },
       "url_main_image": {
-        "type": ["string", "null"]
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "url_main_video": {
-        "type": ["string", "null"]
+        "type": [
+          "string",
+          "null"
+        ]
       }
     }
   },
@@ -105,10 +117,16 @@
         "example": 1
       },
       "url_main_image": {
-        "type": ["string", "null"]
+        "type": [
+          "string",
+          "null"
+        ]
       },
       "url_main_video": {
-        "type": ["string", "null"]
+        "type": [
+          "string",
+          "null"
+        ]
       }
     }
   },
@@ -123,5 +141,8 @@
         "format": "uint32"
       }
     }
+  },
+  "UpdateServiceResponse": {
+    "type": "object"
   }
 }

@@ -40,8 +40,8 @@
     "tags": [
       "Service"
     ],
-    "description": "Creates a service",
-    "operationId": "createService",
+    "description": "Updates a service",
+    "operationId": "updateService",
     "security": [
       {
         "Authorization": []
@@ -62,7 +62,7 @@
       "200": {
         "description": "Success",
         "schema": {
-          "$ref": "../definitions/service.json#/CreateServiceResponse"
+          "$ref": "../definitions/generic.json#/UpdateResponse"
         }
       },
       "404": {
