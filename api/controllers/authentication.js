@@ -14,11 +14,11 @@ module.exports = {
 		let checkPassword = fetchedUser.then(function(rows){
 
 			if (rows.length == 0){
-				return res.status(404).json({"message": "User not found."});
+				throw new Error('404');
 			}
 
 			if(rows[0].is_active == 0){
-				return res.status(403).json({"message": "User account is not active yet."});
+				throw new Error('403');
 			}
 
 			return bcrypt.compare(req.swagger.params.body.value.tx_password, rows[0].tx_password);
@@ -26,12 +26,20 @@ module.exports = {
 
 		return promise.join(fetchedUser, checkPassword, function(rows, authenticated) {	
 			if (!authenticated){
-				return res.status(400).json({"message": "Invalid password or username."});
+				throw new Error('400');
 			}
 			let user = rows[0];
 			return res.status(200).json({"token": authManager.createToken(user)});
 		})
 		.catch(function(err){
+			switch(err.message){
+				case '400':
+					return res.status(400).json({"message": "Invalid password or username."});
+				case '403':
+					return res.status(403).json({"message": "User account is not active yet."});
+				case '404':
+					return res.status(404).json({"message": "User not found."});
+			}
 			errorhandler.internalServer(res, err);
 		});
 	},
@@ -80,8 +88,7 @@ module.exports = {
 			.then(function(rows) {
 				return res.status(200).json(rows);
 			}).catch(function(err){
-				res.status(500).json({"message": "Internal server error."});
-				throw err;
+				errorhandler.internalServer(res, err);
 			});
 		}catch(err){
 			errorhandler.internalServer(res, err);
