@@ -185,14 +185,16 @@ module.exports = {
 		});
 	},
 
-	changePassword : function(req, res){
+	changeUserPassword : function(req, res){
 		bcrypt.hash(req.swagger.params.body.value.tx_password, 10)
 		.then(function(hash) {
 			return db.get().queryAsync('UPDATE ' + db.tables.user + ' SET tx_password = ? WHERE _id = ? ', [hash, req.authInfo._id])
 
 		})
-		.then(function(rows){
-			return res.status(200).send(rows);
+		.then(function(result){
+			if(result.affectedRows == 0) return res.status(404).json({"message": "User not found."});
+
+			return res.status(200).json(result);
 		})
 		.catch(function(err){
 			errorhandler.internalServer(res, err);
