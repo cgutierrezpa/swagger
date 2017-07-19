@@ -101,10 +101,10 @@ module.exports = {
 			[req.swagger.params.body.value, req.swagger.params.body.value._id, req.authInfo._id])
 		.then(function(result) {
 			if (result.affectedRows == 0){
-				return res.status(404).send({"message": "User not found."});
+				return res.status(404).json({"message": "User not found."});
 			}
 
-			return res.status(200).send(result);
+			return res.status(200).json(result);
 		})
 		.catch(function(err){
 			errorhandler.internalServer(res, err);
@@ -117,21 +117,27 @@ module.exports = {
 			if(result.changedRows == 0){
 				return res.status(404).json({"message": "User not found."})
 			}
-			return res.status(200).send(result);
+			return res.status(200).json(result);
 		})
 		.catch(function(err){
 			errorhandler.internalServer(res, err);
 		});
 	},
 
-	resetPassword: function(req, res){
+	resetUserPassword: function(req, res){
 		let connection,
 			passwordResetData = {
 				tx_email: req.swagger.params.body.value.tx_email,
 				dt_expires_on: moment().add(1, 'days').format()
 			}
+		db.get().queryAsync('SELECT _id FROM ' + db.tables.user + ' WHERE tx_email = ?', req.swagger.params.body.value.tx_email)
+		.then(function(fetchedUser){
+			if (fetchedUser.length == 0){
+				throw new Error('404');
+			}
 
-		crypto.randomBytes(128)
+			return crypto.randomBytes(128)
+		})
 		.then(function(buffer){
 			passwordResetData.tx_token = buffer.toString('hex');
 			return db.get().getConnectionAsync();
@@ -141,7 +147,7 @@ module.exports = {
 			return connection.beginTransactionAsync();
 		})
 		.then(function(){
-			return connection.queryAsync('UPDATE ' + db.tables.user + ' SET tx_password = "" WHERE tx_email = ? ', passwordResetData);
+			return db.get().queryAsync('INSERT INTO ' + db.tables.reset_token + ' SET ? ', passwordResetData);
 		})
 		.then(function(result) {
 			let transporter = nodemailer.createTransport({
@@ -170,9 +176,11 @@ module.exports = {
 			return connection.commit();
 		})
 		.then(function(){
-			return connection.release();
+			connection.release();
+			return res.status(200).json({"token": passwordResetData.tx_token});
 		})
 		.catch(function(err){
+			if(err.message == '404') return res.status(404).json({"message": "Email does not exist."});
 			errorhandler.internalServer(res, err);
 		});
 	},

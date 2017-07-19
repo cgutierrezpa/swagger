@@ -41,6 +41,12 @@
       "$ref": "user.json#/DeleteUser"
     }
   },
+  "/user/password/reset": {
+    "x-swagger-router-controller": "user",
+    "post": {
+      "$ref": "user.json#/ResetUserPassword"
+    }
+  },
   "/auth/login": {
     "x-swagger-router-controller": "authentication",
     "post": {
