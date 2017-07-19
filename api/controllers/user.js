@@ -118,11 +118,15 @@ module.exports = {
 	},
 
 	deleteUser : function(req, res) {
-		db.get().queryAsync('UPDATE ' + db.tables.user + ' SET is_active = 0 WHERE _id = ? ', req.authInfo._id).then(function(rows) {
-			return res.status(200).send();
+		db.get().queryAsync('UPDATE ' + db.tables.user + ' SET is_active = 0 WHERE _id = ?', req.authInfo._id)
+		.then(function(result) {
+			if(result.changedRows == 0){
+				return res.status(404).json({"message": "User not found."})
+			}
+			return res.status(200).send(result);
 		})
 		.catch(function(err){
-			res.status(500).send({"message": "Internal server error."});
+			errorhandler.internalServer(res, err);
 		});
 	},
 

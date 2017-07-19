@@ -115,5 +115,37 @@
         }
       }
     }
+  },
+  "DeleteUser": {
+    "tags": [
+      "User"
+    ],
+    "description": "Deletes a user setting property is_active to 0",
+    "operationId": "deleteUser",
+    "security": [
+      {
+        "Authorization": []
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Success",
+        "schema": {
+          "$ref": "../definitions/generic.json#/UpdateResponse"
+        }
+      },
+      "404": {
+        "description": "User not found",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      },
+      "500": {
+        "description": "Error",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      }
+    }
   }
 }

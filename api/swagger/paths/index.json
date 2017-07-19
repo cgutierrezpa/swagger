@@ -36,6 +36,9 @@
     },
     "put": {
       "$ref": "user.json#/UpdateUser"
+    },
+    "delete": {
+      "$ref": "user.json#/DeleteUser"
     }
   },
   "/auth/login": {
