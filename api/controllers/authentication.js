@@ -24,11 +24,11 @@ module.exports = {
 			return bcrypt.compare(req.swagger.params.body.value.tx_password, rows[0].tx_password);
 		});
 
-		return promise.join(fetchedUser, checkPassword, function(user, authenticated) {	
+		return promise.join(fetchedUser, checkPassword, function(rows, authenticated) {	
 			if (!authenticated){
 				return res.status(400).json({"message": "Invalid password or username."});
 			}
-
+			let user = rows[0];
 			return res.status(200).json({"token": authManager.createToken(user)});
 		})
 		.catch(function(err){
