@@ -178,17 +178,5 @@
         "example": "616436819"
       }
     }
-  },
-  "CreateUserResponse": {
-    "type": "object",
-    "required": [
-      "userId"
-    ],
-    "properties": {
-      "userId": {
-        "type": "integer",
-        "format": "uint32"
-      }
-    }
   }
 }

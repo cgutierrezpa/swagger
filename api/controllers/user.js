@@ -41,7 +41,7 @@ module.exports = {
 	},
 
 	createUser : function(req, res) {
-		var connection;
+		var connection, verificationData;
 
 		db.get().queryAsync('SELECT _id FROM ' + db.tables.user + ' WHERE tx_email = ?', req.swagger.params.body.value.tx_email)
 		.then(function(fetchedUser){
@@ -84,7 +84,7 @@ module.exports = {
 		})
 		.then(function(){
 			connection.release();
-			return res.status(200).json({"userId": response.insertId});
+			return res.status(200).json({"token": verificationData.tx_token});
 		})
 		.catch(function(err){
 			if(err.message == '409') return res.status(409).json({"message": 'Email already exists.'});

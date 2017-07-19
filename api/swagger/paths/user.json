@@ -56,7 +56,7 @@
       "200": {
         "description": "Success",
         "schema": {
-          "$ref": "../definitions/user.json#/CreateUserResponse"
+          "$ref": "../definitions/authentication.json#/LoginResponse"
         }
       },
       "409": {
