@@ -4,6 +4,7 @@ var config = {
         url: "http://localhost",
         //secret to generate JSON web tokens
         secret: "quentintokentino",
+        secretReset: "passworderino",
         //mysql connection settings
         database: {
             host:   "fundledb.c7dbtqa0glty.eu-west-1.rds.amazonaws.com",
@@ -24,6 +25,7 @@ var config = {
         url: "http://my.site.com",
         //secret to generate JSON web tokens
         secret: "quentintokentino",
+        secretReset: "passworderino",
         //mysql connection settings
         database: {
             host:   "fundledb.c7dbtqa0glty.eu-west-1.rds.amazonaws.com",
@@ -44,6 +46,7 @@ var config = {
         url: "http://my.site.com",
         //secret to generate JSON web tokens
         secret: "quentintokentino",
+        secretReset: "passworderino",
         //mysql connection settings
         database: {
             host:   "fundledb.c7dbtqa0glty.eu-west-1.rds.amazonaws.com",
