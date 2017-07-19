@@ -43,7 +43,7 @@ module.exports = {
 	createUser : function(req, res) {
 		var connection;
 
-		module.exports.findByEmail(req.swagger.params.body.value.tx_email)
+		db.get().queryAsync('SELECT _id FROM ' + db.tables.user + ' WHERE tx_email = ?', req.swagger.params.body.value.tx_email)
 		.then(function(fetchedUser){
 			if (fetchedUser.length != 0){
 				throw new Error('409');
@@ -125,8 +125,6 @@ module.exports = {
 	},
 
 	resetPassword: function(req, res){
-		module.exports.findByEmail(req.swagger.params.body.value.tx_email)
-
 		let connection,
 			passwordResetData = {
 				tx_email: req.swagger.params.body.value.tx_email,
@@ -156,7 +154,7 @@ module.exports = {
 
 			let htmlBody = '<h1>Password restoration</h1>'
 				+ '<p>Please, click in the link below to reset your password.</p></br>'
-				+ '<a href="http://localhost:3000/api/auth/password/reset' + passwordResetData.tx_token + '">Reset</a>'
+				+ '<a href="http://localhost:3000/api/auth/password/reset/' + passwordResetData.tx_token + '">Reset</a>'
 				+ '</br></br><i>This link will expire in 30 minutes. If it does, you will need to request another link again.</i>'
 
 			let mailOptions = {
