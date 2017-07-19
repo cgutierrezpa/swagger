@@ -44,55 +44,73 @@ module.exports = {
 		});
 	},
 
-	activate : async function(req, res){
-		try{
-			let verificationData = await module.exports.getVerificationData(req.params.token);
+	activateUser : function(req, res){
+		var tokenInfo;
 
-			if(verificationData.length == 0){
-				return res.status(404).json({"message": "Invalid token."});
+		db.get().queryAsync('SELECT tx_email, tx_token, dt_expires_on FROM ' + db.tables.signup_token + 
+			' WHERE tx_token = ? ', req.swagger.params.activateToken.value)
+		.then(function(rows){
+			if(rows.length == 0)
+				throw new Error('404');
+
+			tokenInfo = rows[0];
+
+			if(tokenInfo.dt_expires_on < moment().format())
+				throw new Error('409');
+
+			return db.get().queryAsync('UPDATE ' + db.tables.user + ' SET is_active = 1 WHERE tx_email = ?', tokenInfo.tx_email)
+		})
+		.then(function(result){
+			if(result.affectedRows == 0) throw new Error('404');
+
+			return db.get().queryAsync('SELECT _id, is_admin FROM ' + db.tables.user + ' WHERE tx_email = ?', tokenInfo.tx_email)
+		})
+		.then(function(rows) {
+			if(rows.length == 0) throw new Error('404');
+			let user = {
+				_id: rows[0]._id,
+				is_admin: rows[0].is_admin
 			}
-
-			if (verificationData[0].dt_expires_on < moment().format()){
-				return res.status(409).json({"message": "Token has expired."});
+			return res.status(200).json({"token": authManager.createToken(user)})
+		}).catch(function(err){
+			switch(err.message){
+				case '401':
+					return res.status(401).json({"message": "Invalid token."});
+				case '404':
+					return res.status(404).json({"message": "User not found."});
+				case '409':
+					return res.status(409).json({"message": "Token has expired."});
 			}
-
-			db.get().queryAsync('UPDATE ' + db.tables.user + ' SET is_active = 1 WHERE tx_email = ? ', verificationData[0].tx_email)
-			.then(function(rows) {
-				return res.status(200).json(rows);
-			}).catch(function(err){
-				res.status(500).json({"message": "Internal server error."});
-				throw err;
-			})		
-		}catch(err){
-			res.status(500).json({"message": "Internal server error."});
-			throw err;
-		}
+			errorhandler.internalServer(res, err);
+		})		
 	},
 
-	resetPassword : async function(req, res){
-		try{
-			let passwordResetData = await module.exports.getPasswordResetData(req.body.tx_token);
-
-			if(passwordResetData.length == 0){
-				return res.status(404).json({"message": "Invalid token."});
+	resetPassword : function(req, res){
+		db.get().queryAsync('SELECT tx_email, tx_token, dt_expires_on FROM ' + db.tables.reset_token + ' WHERE tx_token = ? ', token)
+		.then(function(rows){
+			if(rows.length == 0){
+				throw new Error('404');
 			}
 
-			if (passwordResetData[0].dt_expires_on < moment().format()){
-				return res.status(409).json({"message": "Token has expired."});
+			if (rows[0].dt_expires_on < moment().format()){
+				throw new Error('409');
 			}
-
-			bcrypt.hash(req.body.tx_password, 10)
-			.then(function(hash) {
-				return db.get().queryAsync('UPDATE ' + db.tables.user + ' SET tx_password = ? WHERE tx_email = ? ', [hash, passwordResetData[0].tx_email]);
-			})
-			.then(function(rows) {
-				return res.status(200).json(rows);
-			}).catch(function(err){
-				errorhandler.internalServer(res, err);
-			});
-		}catch(err){
+			return bcrypt.hash(req.body.tx_password, 10)
+		})
+		.then(function(hash) {
+			return db.get().queryAsync('UPDATE ' + db.tables.user + ' SET tx_password = ? WHERE tx_email = ? ', [hash, rows[0].tx_email]);
+		})
+		.then(function(rows) {
+			return res.status(200).json(rows);
+		}).catch(function(err){
+			switch(err.message){
+				case '404':
+					return res.status(404).json({"message": "Invalid token."});
+				case '409':
+					return res.status(409).json({"message": "Token has expired."});
+			}
 			errorhandler.internalServer(res, err);
-		}
+		});
 	},
 
 	/* Internal methods non-callable from client */

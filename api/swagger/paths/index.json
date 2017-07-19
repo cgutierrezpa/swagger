@@ -59,6 +59,13 @@
       "$ref": "authentication.json#/Login"
     }
   },
+  "/auth/activate/{activateToken}": {
+    "x-swagger-router-controller": "authentication",
+    "get": {
+      "$ref": "authentication.json#/ActivateUser"
+    }
+  },
+
   "/swagger": {
     "x-swagger-pipe": "swagger_raw"
   }

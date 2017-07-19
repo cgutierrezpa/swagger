@@ -26,9 +26,6 @@
 	"UpdateUserObject" : {
 		"$ref" : "user.json#/UpdateUserObject"
 	},
-	"CreateUserResponse" : {
-		"$ref" : "user.json#/CreateUserResponse"
-	},
 	"CreateServiceResponse" : {
       "$ref" : "service.json#/CreateServiceResponse"
     },

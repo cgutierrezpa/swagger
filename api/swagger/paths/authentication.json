@@ -36,5 +36,40 @@
         }
       }
     }
+  },
+  "ActivateUser": {
+    "tags": [
+      "Authentication"
+    ],
+    "parameters": [
+      {
+        "name": "activateToken",
+        "in": "path",
+        "required": true,
+        "type": "string"
+      }
+    ],
+    "description": "Activates the user within the token passed in the path",
+    "operationId": "activateUser",
+    "responses": {
+      "200": {
+        "description": "Success",
+        "schema": {
+          "$ref": "../definitions/index.json#/LoginResponse"
+        }
+      },
+      "404": {
+        "description": "User not found",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      },
+      "500": {
+        "description": "Error",
+        "schema": {
+          "$ref": "../definitions/error.json#/ErrorResponse"
+        }
+      }
+    }
   }
 }
