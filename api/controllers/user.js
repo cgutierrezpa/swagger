@@ -4,8 +4,7 @@ bcrypt = require('bcrypt'),
 promise = require('bluebird'),
 crypto = promise.promisifyAll(require('crypto')),
 nodemailer = require('nodemailer'),
-moment = require('moment'),
-async = require('async');
+moment = require('moment');
 
 module.exports = {
 
@@ -41,65 +40,60 @@ module.exports = {
 		})
 	},
 
-	create : async function(req, res) {
-		try{
-			let fetchedUser = await module.exports.findByEmail(req.swagger.params.body.value.tx_email);
+	createUser : function(req, res) {
+		var connection;
 
+		module.exports.findByEmail(req.swagger.params.body.value.tx_email)
+		.then(function(fetchedUser){
 			if (fetchedUser.length != 0){
-				return res.status(409).send('Email already exists.');
+				throw new Error('409');
 			}
 
-			var connection;
-			
-			bcrypt.hash(req.swagger.params.body.value.tx_password, 10)
-			.then(function(hash) {
-				let verificationData;
-				let response;
-				req.swagger.params.body.value.tx_password = hash;
-				return db.get().getConnectionAsync();
-			})
-			.then(function(dbConnection){
-				connection = dbConnection;
-				return connection.beginTransactionAsync();
-			})
-			.then(function(){
-				return connection.queryAsync('INSERT INTO ' + db.tables.user + ' SET ? ', req.swagger.params.body.value);
-			})
-			.then(function(rows){
-				return crypto.randomBytesAsync(128);
-			})
-			.then(function(buffer){
-				verificationData = {
-					tx_email: req.swagger.params.body.value.tx_email,
-					tx_token: buffer.toString('hex'),
-					dt_expires_on: moment().add(1, 'days').format()
-				}
+			return bcrypt.hash(req.swagger.params.body.value.tx_password, 10)
+		})
+		.then(function(hash) {
+			let verificationData;
+			let response;
+			req.swagger.params.body.value.tx_password = hash;
+			return db.get().getConnectionAsync();
+		})
+		.then(function(dbConnection){
+			connection = dbConnection;
+			return connection.beginTransactionAsync();
+		})
+		.then(function(){
+			return connection.queryAsync('INSERT INTO ' + db.tables.user + ' SET ? ', req.swagger.params.body.value);
+		})
+		.then(function(result){
+			response = result;
+			return crypto.randomBytesAsync(128);
+		})
+		.then(function(buffer){
+			verificationData = {
+				tx_email: req.swagger.params.body.value.tx_email,
+				tx_token: buffer.toString('hex'),
+				dt_expires_on: moment().add(1, 'days').format()
+			}
 
-				return connection.queryAsync('INSERT INTO ' + db.tables.signup_token + ' SET ? ', verificationData);
-			})
-			.then(function(result) {
-				response = result;
-				return connection.commit();
-			})
-			.then(function(){
-				module.exports.sendVerificationEmail(req.swagger.params.body.value.tx_email);
-				connection.release();
-				return res.status(200).send(response);
-			})
-			.catch(function(err){
-				if (connection != undefined){
-					connection.rollback(function(){
-						res.status(500).send({"message": "Internal server error."});
-						throw err;
-					});
-				}else{
-					res.status(500).send({"message": "Internal server error."});
-					throw err;
-				}
-			})
-		}catch(err){
+			return connection.queryAsync('INSERT INTO ' + db.tables.signup_token + ' SET ? ', verificationData);
+		})
+		.then(function(result) {
+			module.exports.sendVerificationEmail(req.swagger.params.body.value.tx_email);
+
+			return connection.commit();
+		})
+		.then(function(){
+			connection.release();
+			return res.status(200).json({"userId": response.insertId});
+		})
+		.catch(function(err){
+			if(err.message == '409') return res.status(409).json({"message": 'Email already exists.'});
+
+			if (connection != undefined){
+				connection.rollback();
+			}			
 			errorhandler.internalServer(res, err);
-		}
+		})
 	},
 
 	updateUser: function(req, res){
@@ -131,16 +125,25 @@ module.exports = {
 	},
 
 	resetPassword: function(req, res){
-		let passwordResetData = {
-			tx_email: req.swagger.params.body.value.tx_email,
-			tx_token: buffer.toString('hex'),
-			dt_expires_on: moment().add(1, 'days').format()
-		}
+		module.exports.findByEmail(req.swagger.params.body.value.tx_email)
+
+		let connection,
+			passwordResetData = {
+				tx_email: req.swagger.params.body.value.tx_email,
+				dt_expires_on: moment().add(1, 'days').format()
+			}
 
 		crypto.randomBytes(128)
 		.then(function(buffer){
 			passwordResetData.tx_token = buffer.toString('hex');
-			return db.get().queryAsync('INSERT INTO ' + db.tables.reset_token + ' SET ? ', passwordResetData);
+			return db.get().getConnectionAsync();
+		})
+		.then(function(dbConnection){
+			connection = dbConnection;
+			return connection.beginTransactionAsync();
+		})
+		.then(function(){
+			return connection.queryAsync('UPDATE ' + db.tables.user + ' SET tx_password = "" WHERE tx_email = ? ', passwordResetData);
 		})
 		.then(function(result) {
 			let transporter = nodemailer.createTransport({
@@ -151,26 +154,28 @@ module.exports = {
 				}
 			});
 
+			let htmlBody = '<h1>Password restoration</h1>'
+				+ '<p>Please, click in the link below to reset your password.</p></br>'
+				+ '<a href="http://localhost:3000/api/auth/password/reset' + passwordResetData.tx_token + '">Reset</a>'
+				+ '</br></br><i>This link will expire in 30 minutes. If it does, you will need to request another link again.</i>'
+
 			let mailOptions = {
 				from: 'rubenlopezlozoya12@gmail.com',
-				to: req.swagger.params.body.value.tx_email,
+				to: passwordResetData.tx_email,
 				subject: 'Flocker - Password reset',
-				html: '<h1>Password restoration</h1><p>Please, click in the link below to reset your password.</p><a href="http://localhost:3000/api/auth/password/reset' + passwordResetData.tx_token + '">Reset</a>'
+				html: htmlBody
 			};
 
-			transporter.sendMail(mailOptions, function(err, info){
-				if(err){
-					throw err;
-				}
-
-				return info;
-			});
+			return transporter.sendMail(mailOptions);
+		})
+		.then(function(){
+			return connection.commit();
+		})
+		.then(function(){
+			return connection.release();
 		})
 		.catch(function(err){
-			if(err){
-				res.status(500).send({"message": "Internal server error."});
-				throw err;
-			}
+			errorhandler.internalServer(res, err);
 		});
 	},
 
@@ -184,10 +189,7 @@ module.exports = {
 			return res.status(200).send(rows);
 		})
 		.catch(function(err){
-			if(err){
-				res.status(500).send({"message": "Internal server error."});
-				throw err;
-			}
+			errorhandler.internalServer(res, err);
 		});
 	},
 
@@ -217,9 +219,9 @@ module.exports = {
 		});
 	},
 
-	findByEmail : async function(email){
+	findByEmail : function(email){
 		return new Promise(function(resolve, reject){
-			return db.get().queryAsync('SELECT * FROM ' + db.tables.user + ' WHERE tx_email = ?', email)
+			return db.get().queryAsync('SELECT _id FROM ' + db.tables.user + ' WHERE tx_email = ?', email)
 			.then(function(rows){
 				return resolve(rows);
 			})
