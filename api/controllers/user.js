@@ -1,5 +1,6 @@
 let db = require('../../lib/db.js'),
 errorhandler = require('../../lib/errorHandler.js'),
+constants = require('../../resources/constants.js'),
 bcrypt = require('bcrypt'),
 promise = require('bluebird'),
 crypto = promise.promisifyAll(require('crypto')),
@@ -11,7 +12,7 @@ module.exports = {
 	/* Public methods */
 
 	findAllUsers : function(req, res){
-		db.get().queryAsync('SELECT * FROM ' + db.tables.user + ' WHERE is_active = 1').then(function(rows){
+		db.get().queryAsync('SELECT ' + constants.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE is_active = 1').then(function(rows){
 			if (rows.length == 0){
 				return res.status(404).json({"message": "No users found."});
 			}
@@ -24,16 +25,11 @@ module.exports = {
 	},
 
 	findUserById : function(req, res){
-		db.get().queryAsync('SELECT * FROM ' + db.tables.user + ' WHERE _id = ? AND is_active = 1',req.swagger.params.userId.value)
+		db.get().queryAsync('SELECT ' + constants.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE _id = ? AND is_active = 1', req.swagger.params.userId.value)
 		.then(function(rows){
 			if (rows.length == 0){
 				return res.status(404).json({"message": "User not found."});
 			}
-			delete rows[0]._id;
-			delete rows[0].tx_password;
-			delete rows[0].is_active;
-			delete rows[0].dt_create_timestamp;
-
 			return res.status(200).json(rows[0]);
 		}).catch(function(err){
 			errorhandler.internalServer(res, err);
@@ -43,29 +39,29 @@ module.exports = {
 	createUser : function(req, res) {
 		var connection, verificationData;
 
-		db.get().queryAsync('SELECT _id FROM ' + db.tables.user + ' WHERE tx_email = ?', req.swagger.params.body.value.tx_email)
+		//We verify that the user email does not exist already
+		module.exports.findByEmail(req.swagger.params.body.value.tx_email) 
 		.then(function(fetchedUser){
 			if (fetchedUser.length != 0){
 				throw new Error('409');
 			}
 
-			return bcrypt.hash(req.swagger.params.body.value.tx_password, 10)
+			return bcrypt.hash(req.swagger.params.body.value.tx_password, 10);
 		})
 		.then(function(hash) {
-			let verificationData;
-			let response;
 			req.swagger.params.body.value.tx_password = hash;
+
 			return db.get().getConnectionAsync();
 		})
 		.then(function(dbConnection){
 			connection = dbConnection;
+
 			return connection.beginTransactionAsync();
 		})
 		.then(function(){
 			return connection.queryAsync('INSERT INTO ' + db.tables.user + ' SET ? ', req.swagger.params.body.value);
 		})
-		.then(function(result){
-			response = result;
+		.then(function(){ //We generate a random string to act as a verification token for the signup
 			return crypto.randomBytesAsync(128);
 		})
 		.then(function(buffer){
@@ -77,14 +73,14 @@ module.exports = {
 
 			return connection.queryAsync('INSERT INTO ' + db.tables.signup_token + ' SET ? ', verificationData);
 		})
-		.then(function(result) {
-			module.exports.sendVerificationEmail(req.swagger.params.body.value.tx_email);
-
-			return connection.commit();
+		.then(function() {
+			return module.exports.sendVerificationEmail(verificationData.tx_email, verificationData.tx_token);
 		})
 		.then(function(){
-			connection.release();
-			return res.status(200).json({"token": verificationData.tx_token});
+			connection.commit(function(){
+				connection.release();
+				return res.status(200).json({"token": verificationData.tx_token});
+			});
 		})
 		.catch(function(err){
 			if(err.message == '409') return res.status(409).json({"message": 'Email already exists.'});
@@ -126,10 +122,10 @@ module.exports = {
 
 	resetUserPassword: function(req, res){
 		let connection,
-			passwordResetData = {
-				tx_email: req.swagger.params.body.value.tx_email,
-				dt_expires_on: moment().add(1, 'days').format()
-			}
+		passwordResetData = {
+			tx_email: req.swagger.params.body.value.tx_email,
+			dt_expires_on: moment().add(1, 'days').format()
+		}
 		db.get().queryAsync('SELECT _id FROM ' + db.tables.user + ' WHERE tx_email = ?', req.swagger.params.body.value.tx_email)
 		.then(function(fetchedUser){
 			if (fetchedUser.length == 0){
@@ -159,9 +155,9 @@ module.exports = {
 			});
 
 			let htmlBody = '<h1>Password restoration</h1>'
-				+ '<p>Please, click in the link below to reset your password.</p></br>'
-				+ '<a href="http://localhost:3000/api/auth/password/reset/' + passwordResetData.tx_token + '">Reset</a>'
-				+ '</br></br><i>This link will expire in 30 minutes. If it does, you will need to request another link again.</i>'
+			+ '<p>Please, click in the link below to reset your password.</p></br>'
+			+ '<a href="http://localhost:3000/api/auth/password/reset/' + passwordResetData.tx_token + '">Reset</a>'
+			+ '</br></br><i>This link will expire in 30 minutes. If it does, you will need to request another link again.</i>'
 
 			let mailOptions = {
 				from: 'rubenlopezlozoya12@gmail.com',
@@ -203,27 +199,29 @@ module.exports = {
 
 	/* Internal methods non-callable from client */
 	sendVerificationEmail : function(email, token){
-		let transporter = nodemailer.createTransport({
-			service: 'gmail',
-			auth: {
-				user: 'rubenlopezlozoya12@gmail.com',
-				pass: 'elmaskie2'
-			}
-		});
+		return new Promise(function(resolve, reject){
+			let transporter = nodemailer.createTransport({
+				service: 'gmail',
+				auth: {
+					user: 'rubenlopezlozoya12@gmail.com',
+					pass: 'elmaskie2'
+				}
+			});
 
-		let mailOptions = {
-			from: 'rubenlopezlozoya12@gmail.com',
-			to: email,
-			subject: 'Flocker - Account verification',
-			html: '<h1>Thanks for registering to Flocker!</h1><p>Please, click in the link below to verify your account.</p><a href="http://localhost:3000/api/auth/activate/' + token + '">Activate</a>'
-		};
+			let mailOptions = {
+				from: 'rubenlopezlozoya12@gmail.com',
+				to: email,
+				subject: 'Festrush - Account verification',
+				html: '<h1>Thanks for registering to Festrush!</h1><p>Please, click in the link below to verify your account.</p><a href="http://localhost:3000/api/auth/activate/' + token + '">Activate</a>'
+			};
 
-		transporter.sendMail(mailOptions, function(err, info){
-			if(err){
-				throw err;
-			}
+			transporter.sendMail(mailOptions, function(err, info){
+				if(err){
+					return reject(err);
+				}
 
-			return info;
+				return resolve(info);
+			});
 		});
 	},
 

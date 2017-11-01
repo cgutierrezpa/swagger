@@ -25,7 +25,6 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
 	swaggerExpress.register(app);
 
-
   	db.connect(function(err) {
 		if (err) {
 			console.log('Unable to connect to MySQL.')

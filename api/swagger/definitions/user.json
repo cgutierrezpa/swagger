@@ -26,6 +26,7 @@
           "string",
           "null"
         ],
+        "x-nullable": true,
         "example": "/good_url.img"
       },
       "tx_bio": {
@@ -33,6 +34,7 @@
           "string",
           "null"
         ],
+        "x-nullable": true,
         "example": "Test bio"
       },
       "tx_gender": {
@@ -40,12 +42,15 @@
           "string",
           "null"
         ],
+        "x-nullable": true,
         "example": "M"
       },
       "fk_place": {
         "type": [
-          "integer"
+          "integer",
+          "null"
         ],
+        "x-nullable": true,
         "format": "uint32",
         "example": 1
       },
@@ -54,6 +59,7 @@
           "string",
           "null"
         ],
+        "x-nullable": true,
         "example": "612613987"
       },
       "dt_birthday": {
@@ -61,12 +67,12 @@
         "format": "date-time",
         "example": "1993-04-08T22:00:00.000Z"
       },
-      "is_admin": {
-        "type": "integer",
-        "format": "uint32"
-      },
       "n_rating": {
-        "type": "number",
+        "type": [
+          "number",
+          "null"
+        ],
+        "x-nullable": true,
         "format": "double",
         "example": 3.2
       }

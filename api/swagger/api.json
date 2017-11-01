@@ -2,7 +2,7 @@
 	"swagger": "2.0",
 	"info": {
 		"version": "0.0.1",
-		"title": "FlockIt"
+		"title": "Festrush"
 	},
 	"host": "localhost:3000",
 	"basePath": "/",
