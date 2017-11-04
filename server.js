@@ -17,7 +17,7 @@ module.exports = app; // Required to perform tests over the API
 config.appRoot = __dirname; // Required by the Swagger specification.
 config.swaggerFile = 'api/swagger/swagger.json'; //By default, Swagger will look for swagger.yaml so we need to tell it to look for swagger.json
 config.swaggerSecurityHandlers = {
-	Authorization: authManager.checkToken
+	bearerAuth: authManager.checkToken
 }
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {

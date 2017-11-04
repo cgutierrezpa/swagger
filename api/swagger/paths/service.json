@@ -10,28 +10,36 @@
         "Authorization": []
       }
     ],
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "Service object that needs to be added to the database",
-        "required": true,
-        "schema": {
-          "$ref": "../definitions/service.json#/Service"
+    "requestBody": {
+      "description": "Service object that needs to be added to the database",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../definitions/service.json#/Service"
+          }
         }
       }
-    ],
+    },
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/service.json#/CreateServiceResponse"
+        "content":{
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/service.json#/CreateServiceResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content":{
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -47,34 +55,46 @@
         "Authorization": []
       }
     ],
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "Updates the service passed in the body",
-        "required": true,
-        "schema": {
-          "$ref": "../definitions/service.json#/UpdateService"
+    "requestBody": {
+      "description": "Updates the service passed in the body",
+      "required": true,
+      "content":{
+        "application/json": {
+          "schema": {
+            "$ref": "../definitions/service.json#/UpdateService"
+          }
         }
       }
-    ],
+    },
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/generic.json#/UpdateResponse"
+        "content":{
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/generic.json#/UpdateResponse"
+            }
+          }
         }
       },
       "404": {
         "description": "Service not found",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content":{
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content":{
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -83,41 +103,52 @@
     "tags": [
       "Service"
     ],
-    "description": "Updates the description of a service",
     "operationId": "updateServiceDescription",
     "security": [
       {
         "Authorization": []
       }
     ],
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "Updates the description of service passed in the body",
-        "required": true,
-        "schema": {
-          "$ref": "../definitions/service.json#/UpdateServiceDescription"
+    "requestBody": {
+      "description": "Updates the description of service passed in the body",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../definitions/service.json#/UpdateServiceDescription"
+          }
         }
       }
-    ],
+    },
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/generic.json#/UpdateResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/generic.json#/UpdateResponse"
+            }
+          }
         }
       },
       "404": {
         "description": "Service not found",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -131,8 +162,10 @@
         "name": "providerId",
         "in": "path",
         "required": true,
-        "type": "integer",
-        "format": "uint32"
+        "schema": {
+          "type": "integer",
+          "format": "uint32"
+        }
       }
     ],
     "description": "Retrieves an array of services offered by an active provider",
@@ -140,20 +173,32 @@
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/service.json#/ServicesArray"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/service.json#/ServicesArray"
+            }
+          }
         }
       },
       "404": {
         "description": "Service not found",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }

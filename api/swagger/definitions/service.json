@@ -36,16 +36,10 @@
         "example": 1
       },
       "url_main_image": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": "string"
       },
       "url_main_video": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": "string"
       },
       "n_rating": {
         "type": "number",
@@ -79,16 +73,10 @@
         "example": 1
       },
       "url_main_image": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": "string"
       },
       "url_main_video": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": "string"
       }
     }
   },
@@ -117,16 +105,10 @@
         "example": 1
       },
       "url_main_image": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": "string"
       },
       "url_main_video": {
-        "type": [
-          "string",
-          "null"
-        ]
+        "type": "string"
       }
     }
   },

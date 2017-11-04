@@ -1,6 +1,6 @@
 let db = require('../../lib/db.js'),
 errorhandler = require('../../lib/errorHandler.js'),
-constants = require('../../resources/constants.js'),
+CONSTANTS = require('../../resources/constants.js'),
 bcrypt = require('bcrypt'),
 promise = require('bluebird'),
 crypto = promise.promisifyAll(require('crypto')),
@@ -12,7 +12,7 @@ module.exports = {
 	/* Public methods */
 
 	findAllUsers : function(req, res){
-		db.get().queryAsync('SELECT ' + constants.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE is_active = 1').then(function(rows){
+		db.get().queryAsync('SELECT ' + CONSTANTS.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE is_active = 1').then(function(rows){
 			if (rows.length == 0){
 				return res.status(404).json({"message": "No users found."});
 			}
@@ -25,7 +25,7 @@ module.exports = {
 	},
 
 	findUserById : function(req, res){
-		db.get().queryAsync('SELECT ' + constants.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE _id = ? AND is_active = 1', req.swagger.params.userId.value)
+		db.get().queryAsync('SELECT ' + CONSTANTS.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE _id = ? AND is_active = 1', req.swagger.params.userId.value)
 		.then(function(rows){
 			if (rows.length == 0){
 				return res.status(404).json({"message": "User not found."});
@@ -94,7 +94,7 @@ module.exports = {
 
 	updateUser: function(req, res){
 		db.get().queryAsync('UPDATE ' + db.tables.user + ' SET ? WHERE _id = ? AND is_active = 1',
-			[req.swagger.params.body.value, req.swagger.params.body.value._id, req.authInfo._id])
+			[req.swagger.params.body.value, req.swagger.params.body.value._id]) //Include req.authInfo._id as second parameter when authentication fixed
 		.then(function(result) {
 			if (result.affectedRows == 0){
 				return res.status(404).json({"message": "User not found."});

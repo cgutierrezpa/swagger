@@ -22,43 +22,28 @@
         "example": "Ruben"
       },
       "url_profile_image": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
         "x-nullable": true,
         "example": "/good_url.img"
       },
       "tx_bio": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
         "x-nullable": true,
         "example": "Test bio"
       },
       "tx_gender": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
         "x-nullable": true,
         "example": "M"
       },
       "fk_place": {
-        "type": [
-          "integer",
-          "null"
-        ],
+        "type": "integer",
         "x-nullable": true,
         "format": "uint32",
         "example": 1
       },
       "tx_phone": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
         "x-nullable": true,
         "example": "612613987"
       },
@@ -68,10 +53,7 @@
         "example": "1993-04-08T22:00:00.000Z"
       },
       "n_rating": {
-        "type": [
-          "number",
-          "null"
-        ],
+        "type": "number",
         "x-nullable": true,
         "format": "double",
         "example": 3.2
@@ -137,10 +119,8 @@
         "example": "Ruben"
       },
       "tx_gender": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
+        "x-nullable": true,
         "example": "M",
         "enum": [
           "M",
@@ -155,33 +135,51 @@
         "example": "1993-04-08T22:00:00.000Z"
       },
       "fk_place": {
-        "type": [
-          "integer",
-          "null"
-        ],
+        "type": "integer",
+        "x-nullable": true,
         "format": "uint32",
         "example": 1
       },
       "tx_bio": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
+        "x-nullable": true,
         "example": "This is a bio"
       },
       "url_profile_image": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
+        "x-nullable": true,
         "example": "This is a bio"
       },
       "tx_phone": {
-        "type": [
-          "string",
-          "null"
-        ],
+        "type": "string",
+        "x-nullable": true,
         "example": "616436819"
+      }
+    }
+  },
+  "ResetPasswordObject": {
+    "type": "object",
+    "required": [
+      "tx_email"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "tx_email": {
+        "type": "string",
+        "example": "example@domain.com"
+      }
+    }
+  },
+  "ChangePasswordObject": {
+    "type": "object",
+    "required": [
+      "tx_password"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "tx_password": {
+        "type": "string",
+        "example": "password1234"
       }
     }
   }

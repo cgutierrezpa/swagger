@@ -8,8 +8,10 @@
         "name": "userId",
         "in": "path",
         "required": true,
-        "type": "integer",
-        "format": "uint32"
+        "schema": {
+          "type": "integer",
+          "format": "uint32"
+        }
       }
     ],
     "description": "Retrieves a user",
@@ -17,20 +19,32 @@
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/user.json#/FetchedUser"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/user.json#/FetchedUser"
+            }
+          }
         }
       },
       "404": {
         "description": "User not found",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -41,34 +55,46 @@
     ],
     "description": "Register a user and send a verification email",
     "operationId": "createUser",
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "User object to be registered in the database",
-        "required": true,
-        "schema": {
-          "$ref": "../definitions/user.json#/RegisterUserObject"
+    "requestBody": {
+      "description": "User object to be registered in the database",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../definitions/user.json#/RegisterUserObject"
+          }
         }
       }
-    ],
+    },
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/authentication.json#/LoginResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/authentication.json#/LoginResponse"
+            }
+          }
         }
       },
       "409": {
         "description": "Email already exists",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -77,41 +103,63 @@
     "tags": [
       "User"
     ],
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "Updates an active user",
-        "required": true,
-        "schema": {
-          "$ref": "../definitions/user.json#/UpdateUserObject"
+    "requestBody": {
+      "description": "Updates an active user",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../definitions/user.json#/UpdateUserObject"
+          }
         }
       }
-    ],
+    },
     "description": "Updates a user",
     "operationId": "updateUser",
     "security": [
       {
-        "Authorization": []
+        "bearerAuth": []
       }
     ],
     "responses": {
       "200": {
-        "description": "Success",
-        "schema": {
-          "$ref": "../definitions/generic.json#/UpdateResponse"
+        "description": "Success.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/generic.json#/UpdateResponse"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized access.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/UnauthorizedResponse"
+            }
+          }
         }
       },
       "404": {
-        "description": "User not found",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "description": "User not found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
-        "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "description": "Internal server error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -130,20 +178,32 @@
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/generic.json#/UpdateResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/generic.json#/UpdateResponse"
+            }
+          }
         }
       },
       "404": {
         "description": "User not found",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -154,44 +214,46 @@
     ],
     "description": "Initiates the process to reset the user password. It sends a Reset link with the token to the email passed in the body",
     "operationId": "resetUserPassword",
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "Object containing the email where the Reset link will be sent",
-        "required": true,
-        "schema": {
-          "type": "object",
-          "required": [
-            "tx_email"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "tx_email": {
-              "type": "string",
-              "example": "example@domain.com"
-            }
+    "requestBody": {
+      "description": "Object containing the email where the Reset link will be sent",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../definitions/user.json#/ResetPasswordObject"
           }
         }
       }
-    ],
+    },
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/authentication.json#/LoginResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/authentication.json#/LoginResponse"
+            }
+          }
         }
       },
       "404": {
         "description": "Email does not exist",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }
@@ -207,44 +269,46 @@
         "Authorization": []
       }
     ],
-    "parameters": [
-      {
-        "in": "body",
-        "name": "body",
-        "description": "New password",
-        "required": true,
-        "schema": {
-          "type": "object",
-          "required": [
-            "tx_password"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "tx_password": {
-              "type": "string",
-              "example": "password1234"
-            }
+    "requestBody": {
+      "description": "New password",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "../definitions/user.json#/ChangePasswordObject"
           }
         }
       }
-    ],
+    },
     "responses": {
       "200": {
         "description": "Success",
-        "schema": {
-          "$ref": "../definitions/generic.json#/UpdateResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/generic.json#/UpdateResponse"
+            }
+          }
         }
       },
       "404": {
         "description": "User does not exist",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       },
       "500": {
         "description": "Error",
-        "schema": {
-          "$ref": "../definitions/error.json#/ErrorResponse"
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/error.json#/ErrorResponse"
+            }
+          }
         }
       }
     }

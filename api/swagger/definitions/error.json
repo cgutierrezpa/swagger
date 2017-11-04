@@ -8,5 +8,15 @@
         "type": "string"
       }
     }
+  },
+  "UnauthorizedResponse": {
+    "required": [
+      "message"
+    ],
+    "properties": {
+      "message": {
+        "type": "string"
+      }
+    }
   }
 }
