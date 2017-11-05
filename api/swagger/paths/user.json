@@ -1,4 +1,23 @@
 {
+  "GetAllUsers": {
+    "tags": [
+      "User"
+    ],
+    "description": "Retrieves all users",
+    "operationId": "findAllUsers",
+    "responses": {
+      "200": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "../definitions/user.json#/UsersArray"
+            }
+          }
+        }
+      }
+    }
+  },
   "GetUser": {
     "tags": [
       "User"
@@ -36,16 +55,6 @@
             }
           }
         }
-      },
-      "500": {
-        "description": "Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
       }
     }
   },
@@ -55,6 +64,11 @@
     ],
     "description": "Register a user and send a verification email",
     "operationId": "createUser",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
     "requestBody": {
       "description": "User object to be registered in the database",
       "required": true,
@@ -86,22 +100,19 @@
             }
           }
         }
-      },
-      "500": {
-        "description": "Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
       }
     }
   },
   "UpdateUser": {
     "tags": [
       "User"
+    ],
+    "description": "Updates a user",
+    "operationId": "updateUser",
+    "security": [
+      {
+        "bearerAuth": []
+      }
     ],
     "requestBody": {
       "description": "Updates an active user",
@@ -114,13 +125,6 @@
         }
       }
     },
-    "description": "Updates a user",
-    "operationId": "updateUser",
-    "security": [
-      {
-        "bearerAuth": []
-      }
-    ],
     "responses": {
       "200": {
         "description": "Success.",
@@ -132,28 +136,8 @@
           }
         }
       },
-      "401": {
-        "description": "Unauthorized access.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/UnauthorizedResponse"
-            }
-          }
-        }
-      },
       "404": {
         "description": "User not found.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
-      },
-      "500": {
-        "description": "Internal server error.",
         "content": {
           "application/json": {
             "schema": {
@@ -172,7 +156,7 @@
     "operationId": "deleteUser",
     "security": [
       {
-        "Authorization": []
+        "bearerAuth": []
       }
     ],
     "responses": {
@@ -188,16 +172,6 @@
       },
       "404": {
         "description": "User not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
-      },
-      "500": {
-        "description": "Error",
         "content": {
           "application/json": {
             "schema": {
@@ -245,16 +219,6 @@
             }
           }
         }
-      },
-      "500": {
-        "description": "Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
       }
     }
   },
@@ -293,16 +257,6 @@
       },
       "404": {
         "description": "User does not exist",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
-      },
-      "500": {
-        "description": "Error",
         "content": {
           "application/json": {
             "schema": {

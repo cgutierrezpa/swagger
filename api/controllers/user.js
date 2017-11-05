@@ -25,7 +25,7 @@ module.exports = {
 	},
 
 	findUserById : function(req, res){
-		db.get().queryAsync('SELECT ' + CONSTANTS.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE _id = ? AND is_active = 1', req.swagger.params.userId.value)
+		db.get().queryAsync('SELECT ' + CONSTANTS.USER_PUBLIC_DATA + ' FROM ' + db.tables.user + ' WHERE _id = ? AND is_active = 1', req.params.userId)
 		.then(function(rows){
 			if (rows.length == 0){
 				return res.status(404).json({"message": "User not found."});
@@ -40,16 +40,16 @@ module.exports = {
 		var connection, verificationData;
 
 		//We verify that the user email does not exist already
-		module.exports.findByEmail(req.swagger.params.body.value.tx_email) 
+		module.exports.findByEmail(req.body.tx_email) 
 		.then(function(fetchedUser){
 			if (fetchedUser.length != 0){
 				throw new Error('409');
 			}
 
-			return bcrypt.hash(req.swagger.params.body.value.tx_password, 10);
+			return bcrypt.hash(req.body.tx_password, 10);
 		})
 		.then(function(hash) {
-			req.swagger.params.body.value.tx_password = hash;
+			req.body.tx_password = hash;
 
 			return db.get().getConnectionAsync();
 		})
@@ -59,14 +59,14 @@ module.exports = {
 			return connection.beginTransactionAsync();
 		})
 		.then(function(){
-			return connection.queryAsync('INSERT INTO ' + db.tables.user + ' SET ? ', req.swagger.params.body.value);
+			return connection.queryAsync('INSERT INTO ' + db.tables.user + ' SET ? ', req.body);
 		})
 		.then(function(){ //We generate a random string to act as a verification token for the signup
 			return crypto.randomBytesAsync(128);
 		})
 		.then(function(buffer){
 			verificationData = {
-				tx_email: req.swagger.params.body.value.tx_email,
+				tx_email: req.body.tx_email,
 				tx_token: buffer.toString('hex'),
 				dt_expires_on: moment().add(1, 'days').format()
 			}
@@ -79,7 +79,7 @@ module.exports = {
 		.then(function(){
 			connection.commit(function(){
 				connection.release();
-				return res.status(200).json({"token": verificationData.tx_token});
+				return res.status(200);
 			});
 		})
 		.catch(function(err){
@@ -94,7 +94,7 @@ module.exports = {
 
 	updateUser: function(req, res){
 		db.get().queryAsync('UPDATE ' + db.tables.user + ' SET ? WHERE _id = ? AND is_active = 1',
-			[req.swagger.params.body.value, req.swagger.params.body.value._id]) //Include req.authInfo._id as second parameter when authentication fixed
+			[req.body, req.body._id]) //Include req.authInfo._id as second parameter when authentication fixed
 		.then(function(result) {
 			if (result.affectedRows == 0){
 				return res.status(404).json({"message": "User not found."});

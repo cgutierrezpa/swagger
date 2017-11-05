@@ -23,14 +23,11 @@
       "$ref": "service.json#/GetServiceByProvider"
     }
   },
-  "/user/{userId}": {
-    "x-swagger-router-controller": "user",
-    "get": {
-      "$ref": "user.json#/GetUser"
-    }
-  },
   "/user": {
     "x-swagger-router-controller": "user",
+    "get": {
+      "$ref": "user.json#/GetAllUsers"
+    },
     "post": {
       "$ref": "user.json#/CreateUser"
     },
@@ -39,6 +36,12 @@
     },
     "delete": {
       "$ref": "user.json#/DeleteUser"
+    }
+  },
+  "/user/{userId}": {
+    "x-swagger-router-controller": "user",
+    "get": {
+      "$ref": "user.json#/GetUser"
     }
   },
   "/user/password/reset": {

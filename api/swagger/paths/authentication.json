@@ -36,16 +36,6 @@
             }
           }
         }
-      },
-      "500": {
-        "description": "Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
       }
     }
   },
@@ -78,16 +68,6 @@
       },
       "404": {
         "description": "User not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "../definitions/error.json#/ErrorResponse"
-            }
-          }
-        }
-      },
-      "500": {
-        "description": "Error",
         "content": {
           "application/json": {
             "schema": {

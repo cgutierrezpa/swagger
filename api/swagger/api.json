@@ -23,11 +23,33 @@
 			"$ref": "./definitions/index.json"
 		},
 		"securitySchemes": {
-			"Authorization": {
+			"BearerAuth": {
 				"description": "Authentication token for restricted operations",
-				"type": "apiKey",
-				"name": "Authorization",
-				"in": "header"
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"responses": {
+			"401": {
+				"description": "Unauthorized access.",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "definitions/error.json#/UnauthorizedResponse"
+						}
+					}
+				}
+			},
+			"500": {
+				"description": "Error",
+				"content": {
+					"application/json": {
+						"schema": {
+							"$ref": "definitions/error.json#/ErrorResponse"
+						}
+					}
+				}
 			}
 		}
 	}
