@@ -9,7 +9,7 @@ module.exports = {
 
 	login: function(req, res){
 		let fetchedUser = db.get().queryAsync('SELECT _id, tx_password, is_active, is_admin FROM ' + db.tables.user +
-		' WHERE tx_email = ?', req.swagger.params.body.value.tx_email);
+		' WHERE tx_email = ?', req.body.tx_email);
 
 		let checkPassword = fetchedUser.then(function(rows){
 
@@ -21,7 +21,7 @@ module.exports = {
 				throw new Error('403');
 			}
 
-			return bcrypt.compare(req.swagger.params.body.value.tx_password, rows[0].tx_password);
+			return bcrypt.compare(req.body.tx_password, rows[0].tx_password);
 		});
 
 		return promise.join(fetchedUser, checkPassword, function(rows, authenticated) {	
@@ -48,7 +48,7 @@ module.exports = {
 		var tokenInfo;
 
 		db.get().queryAsync('SELECT tx_email, tx_token, dt_expires_on FROM ' + db.tables.signup_token + 
-			' WHERE tx_token = ? ', req.swagger.params.activateToken.value)
+			' WHERE tx_token = ? ', req.params.activateToken)
 		.then(function(rows){
 			if(rows.length == 0)
 				throw new Error('404');
